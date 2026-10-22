@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Space - Horta Urbana</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="#inicio">
+                <img src="IMG/logo-green-space.png" alt="Green Space">
+            </a>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#servicos">Produtos & Serviços</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+
+        <div class="auth-buttons">
+            <a href="cadastro.html" id="btn-login-auth" class="btn-login">Login/Cadastro</a>
+        
+            <div id="user-info" style="display: none; align-items: center; gap: 15px;">
+                <span id="user-name" style="color: #2e7d32; font-weight: 600;"></span>
+                <button id="btn-logout" style="background: none; border: 1px solid #ccc; cursor: pointer; padding: 5px 10px; border-radius: 5px;">Sair</button>
+            </div>
+        </div>
+
+    </header>
+
+    <section id="inicio" class="hero-carousel">
+        <div class="slides">
+            <div class="slide active" style="background-image: url('IMG/fundo1.jpg');"></div>
+            <div class="slide" style="background-image: url('IMG/fundo2.jpg');"></div>
+            <div class="slide" style="background-image: url('IMG/fundo3.jpg');"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1>Transforme seu espaço em um refúgio verde.</h1>
+            <p>Soluções completas para hortas urbanas em apartamentos e pequenos espaços.</p>
+            <a href="#servicos" class="btn-main">Ver Produtos</a>
+        </div>
+
+        <div class="custom-shape-divider-bottom-1711580000">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.2,35.26,69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="#f4f7f4"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.94,9.41,104.5,20.1,69.24,22,137.71,30.35,209.1,13.9,68.4-15.79,137.13-57.57,209.89-63.9,68.23-5.93,135.64,13.6,191.35,37.05V0Z" opacity=".5" fill="#f4f7f4"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.41,78.51,34.23,158.22,46.16,243.68,12.06,21.22-8.47,43.87-18.17,67.33-25.26C1080.1,1.21,1156.3,1.35,1200,30.34V0Z" fill="#f4f7f4"></path>
+            </svg>
+        </div>
+    </section>
+
+    <section id="sobre" class="about">
+    <div class="container about-wrapper">
+        <div class="about-image">
+            <img src="IMG/sobre-nos.jpg" alt="Equipe Green Space cuidando de horta">
+        </div>
+        <div class="about-text">
+            <span>Quem Somos</span>
+            <h2>Conectando você à natureza, <br>onde quer que você more.</h2>
+            <p>Inspirada pela sustentabilidade, a <strong>Green Space</strong> nasceu para quebrar a barreira de que morar em cidades grandes significa estar longe do verde.</p>
+            
+            <div class="about-features">
+                <div class="feature-item">
+                    <div class="feature-icon">🌿</div>
+                    <div>
+                        <h4>Sustentabilidade</h4>
+                        <p>Reduzimos o impacto ambiental com hortas orgânicas.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🏢</div>
+                    <div>
+                        <h4>Foco Urbano</h4>
+                        <p>Especialistas em apartamentos e varandas pequenas.</p>
+                    </div>
+                </div>
+            </div>
+            <a href="#contato" class="btn-main">Saiba Mais</a>
+        </div>
+    </div>
+</section>
+
+    <section id="servicos" class="products">
+    <div class="container">
+        <span class="subtitle">Nossa Vitrine</span>
+        <h2 class="section-title">Soluções para sua Horta</h2>
+        
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterProducts('todos')">Todos</button>
+            <button class="filter-btn" onclick="filterProducts('automacao')">Automação</button>
+            <button class="filter-btn" onclick="filterProducts('acessorios')">Acessórios</button>
+            <button class="filter-btn" onclick="filterProducts('conhecimento')">Livros & Guias</button>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card" data-category="automacao">
+                <div class="product-thumb">
+                    <span class="badge">Mais Vendido</span>
+                    <img src="IMG/irrigacao-wifi.jpg" alt="Sistema de Irrigação">
+                </div>
+                <div class="product-details">
+                    <h3>Irrigação Smart Wi-Fi</h3>
+                    <p>Controle a rega pelo celular com sensores de umidade integrados.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 189,90</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="automacao">
+                <div class="product-thumb">
+                    <img src="IMG/sensor-luz.jpg" alt="Sensor de Luz">
+                </div>
+                <div class="product-details">
+                    <h3>Temporizador de LED</h3>
+                    <p>Garanta que suas plantas recebam a luz ideal automaticamente todos os dias.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 124,00</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="automacao">
+                <div class="product-thumb">
+                    <img src="IMG/kit-hidroponia.jpg" alt="Kit Hidroponia">
+                </div>
+                <div class="product-details">
+                    <h3>Mini Kit Hidropônico</h3>
+                    <p>Sistema completo de circulação de água para cultivar sem terra.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 299,00</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="acessorios">
+                <div class="product-thumb">
+                    <img src="IMG/mangueira.jpg" alt="Mangueira Retrátil">
+                </div>
+                <div class="product-details">
+                    <h3>Mangueira Slim 15m</h3>
+                    <p>Expansível e super leve. Ideal para quem tem pouco espaço de armazenamento.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 79,90</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="acessorios">
+                <div class="product-thumb">
+                    <img src="IMG/vaso-auto-irrigavel.jpg" alt="Vaso Auto-irrigável">
+                </div>
+                <div class="product-details">
+                    <h3>Vaso Auto-irrigável G</h3>
+                    <p>Sistema de cordões que mantém a terra úmida por até 15 dias.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 45,90</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="acessorios">
+                <div class="product-thumb">
+                    <img src="IMG/kit-ferramentas.jpg" alt="Ferramentas">
+                </div>
+                <div class="product-details">
+                    <h3>Kit Ergonômico Pro</h3>
+                    <p>Conjunto de pás e ancinhos com cabo emborrachado para conforto total.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 88,00</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="conhecimento">
+                <div class="product-thumb">
+                    <img src="IMG/guia-jardinagem.jpg" alt="Guia de Jardinagem">
+                </div>
+                <div class="product-details">
+                    <h3>Horta em Apartamento</h3>
+                    <p>O guia definitivo para cultivar temperos e hortaliças em pequenos espaços.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 55,00</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="conhecimento">
+                <div class="product-thumb">
+                    <img src="IMG/manual-adubacao.jpg" alt="Manual de Adubação">
+                </div>
+                <div class="product-details">
+                    <h3>Segredos da Adubação</h3>
+                    <p>Aprenda a criar seu próprio adubo orgânico e nutrir suas plantas.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 39,90</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="conhecimento">
+                <div class="product-thumb">
+                    <img src="IMG/planner-horta.jpg" alt="Planner de Horta">
+                </div>
+                <div class="product-details">
+                    <h3>Planner da Horta Urbana</h3>
+                    <p>Organize suas sementeiras, colheitas e cronograma de regas.</p>
+                    <div class="product-price-action">
+                        <span class="price">R$ 42,00</span>
+                        <button class="btn-buy-icon">🛒 Adicionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <section id="contato" class="contact-premium">
+        <div class="container contact-wrapper">
+            <div class="contact-info">
+                <span class="subtitle">Canais de Atendimento</span>
+                <h2>Vamos cultivar essa <br> conversa?</h2>
+                <p>Dúvidas sobre seu pedido ou ajuda para escolher o sistema ideal? Nossa equipe está pronta para ajudar.</p>
+                
+                <div class="info-cards">
+                    <div class="info-card-item">
+                        <div class="info-icon">📍</div>
+                        <div>
+                            <h4>Sede Green Space</h4>
+                            <p>Av. Paulista, 1000 - São Paulo, SP</p>
+                        </div>
+                    </div>
+                    <div class="info-card-item">
+                        <div class="info-icon">📞</div>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>(11) 98765-4321</p>
+                        </div>
+                    </div>
+                    <div class="info-card-item">
+                        <div class="info-icon">✉️</div>
+                        <div>
+                            <h4>E-mail</h4>
+                            <p>contato@greenspace.com.br</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form-container">
+                <form class="modern-form">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" placeholder="Como podemos te chamar?" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Seu melhor E-mail</label>
+                        <input type="email" placeholder="exemplo@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Assunto</label>
+                        <select>
+                            <option>Dúvida sobre Produto</option>
+                            <option>Suporte Técnico</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sua Mensagem</label>
+                        <textarea placeholder="Conte-nos como podemos ajudar..." rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn-send">Enviar Mensagem 🌿</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Green Space - Todos os direitos reservados.</p>
+    </footer>
+
+    <div id="cart-sidebar" class="cart-sidebar">
+             <div class="cart-header">
+                <h3>Seu Carrinho</h3>
+                <button class="close-cart">✕</button>
+            </div>
+
+        <div id="cart-items" class="cart-items">
+            <p class="empty-msg">Seu carrinho está vazio.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="total-price">R$ 0,00</span>
+            </div>
+            <button id="btn-clear-cart" class="btn-clear">Limpar Carrinho 🗑️</button>
+            
+            <button class="btn-checkout">Finalizar Compra</button>
+        </div>
+    </div>
+    <div id="cart-overlay" onclick="toggleCart()"></div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

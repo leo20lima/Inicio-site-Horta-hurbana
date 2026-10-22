@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Green Space</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="index.html"
+          ><img src="IMG/logo-green-space.png" alt="Green Space"
+        /></a>
+      </div>
+    </header>
+
+    <main class="checkout-container">
+      <section class="checkout-box">
+        <h2>Dados de Entrega</h2>
+        <form id="checkout-form">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>CEP</label>
+              <input type="text" id="cep" placeholder="00000-000" maxlength="9" inputmode="numeric" required />
+          </div>
+            <div class="form-group full-width">
+              <label>Endereço Completo</label>
+              <input type="text" id="endereco" required />
+            </div>
+            <div class="form-group">
+              <label>Número</label>
+              <input type="text" id="numero" required />
+            </div>
+            <div class="form-group">
+              <label>Cidade</label>
+              <input type="text" id="cidade" required />
+            </div>
+          </div>
+
+          <h2 style="margin-top: 30px">Forma de Pagamento</h2>
+          <div class="payment-methods" id="payment-methods">
+            <div class="payment-option active" data-method="cartao">
+              💳 Cartão
+            </div>
+            <div class="payment-option" data-method="pix">💸 PIX</div>
+            <div class="payment-option" data-method="boleto">📄 Boleto</div>
+          </div>
+        </form>
+      </section>
+
+      <aside class="checkout-box">
+        <h2>Resumo do Pedido</h2>
+        <div id="checkout-summary-list"></div>
+
+        <div
+          class="order-summary-item"
+          style="
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            border-top: 2px solid #f0f0f0;
+            padding-top: 15px;
+          "
+        >
+          <span>Total</span>
+          <span id="checkout-total-price">R$ 0,00</span>
+        </div>
+        <button type="submit" form="checkout-form" class="btn-finish">
+          Finalizar Compra 🌿
+        </button>
+      </aside>
+    </main>
+
+
+    <!-------- JavaScript   --------->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function () {
+        // SUBSTITUA PELO SEU PUBLIC KEY DO EMAILJS
+        emailjs.init("63g3LLYw7dcLdK1LZ");
+      })();
+    </script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+      import { getDatabase, ref, set, get, remove, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    
+      const firebaseConfig = {
+        apiKey: "AIzaSyAUeNqpagN-1JmKZ4Y5yOtUovtdVQXrB9c",
+        authDomain: "projetotcc-3ace5.firebaseapp.com",
+        databaseURL: "https://projetotcc-3ace5-default-rtdb.firebaseio.com",
+        projectId: "projetotcc-3ace5",
+        storageBucket: "projetotcc-3ace5.firebasestorage.app",
+        messagingSenderId: "1022715712496",
+        appId: "1:1022715712496:web:6923c5a87a81bddd86c335",
+        measurementId: "G-HYCZQT0BS7"
+      };
+    
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getDatabase(app);
+    
+      let usuarioLogado = null;
+    
+      // --- MÁSCARA DE CEP ---
+      const cepInput = document.getElementById("cep");
+      cepInput.addEventListener("input", (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 5) {
+            value = value.substring(0, 5) + "-" + value.substring(5, 8);
+        }
+        e.target.value = value;
+      });
+    
+      // --- 1. MONITORAR LOGIN E CARREGAR ENDEREÇO ---
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          usuarioLogado = user;
+          const snapshot = await get(ref(db, `usuarios/${user.uid}/endereco`));
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            document.getElementById("cep").value = data.cep || "";
+            document.getElementById("endereco").value = data.rua || "";
+            document.getElementById("numero").value = data.numero || "";
+            document.getElementById("cidade").value = data.cidade || "";
+          }
+        } else {
+          alert("Você precisa estar logado para finalizar a compra!");
+          window.location.href = "cadastro.html";
+        }
+      });
+    
+      // --- 2. RESUMO DO CARRINHO ---
+      const itensSalvos = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const container = document.getElementById("checkout-summary-list");
+      const totalElement = document.getElementById("checkout-total-price");
+      let total = 0;
+    
+      itensSalvos.forEach((item) => {
+        total += item.preco;
+        container.innerHTML += `
+          <div class="order-summary-item">
+              <span>${item.nome}</span>
+              <span>R$ ${item.preco.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
+          </div>`;
+      });
+      totalElement.innerText = `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
+    
+      // --- 3. SELEÇÃO DE PAGAMENTO ---
+      const options = document.querySelectorAll(".payment-option");
+      options.forEach((option) => {
+        option.addEventListener("click", () => {
+          options.forEach((opt) => opt.classList.remove("active"));
+          option.classList.add("active");
+        });
+      });
+    
+      // --- 4. FINALIZAR COMPRA ---
+      document.getElementById("checkout-form").onsubmit = async (e) => {
+        e.preventDefault();
+        if (!usuarioLogado) return;
+    
+        const dadosEntrega = {
+            cep: document.getElementById("cep").value.replace(/\D/g, ""), 
+            rua: document.getElementById("endereco").value,
+            numero: document.getElementById("numero").value,
+            cidade: document.getElementById("cidade").value
+        };
+    
+        const botaoAtivo = document.querySelector(".payment-option.active");
+        const metodoAtivo = botaoAtivo ? botaoAtivo.innerText : "Não selecionado";
+    
+        const novoPedido = {
+            cliente: usuarioLogado.displayName || usuarioLogado.email,
+            email: usuarioLogado.email,
+            itens: itensSalvos,
+            total: total,
+            metodoPagamento: metodoAtivo,
+            endereco: dadosEntrega,
+            data: new Date().toLocaleString("pt-BR")
+        };
+    
+        try {
+            // A. SALVA NO BANCO (FIREBASE)
+            const pedidosRef = ref(db, 'pedidos/' + usuarioLogado.uid);
+            await push(pedidosRef, novoPedido);
+            await set(ref(db, `usuarios/${usuarioLogado.uid}/endereco`), dadosEntrega);
+    
+            // B. ENVIA O E-MAIL (EMAILJS)
+            const templateParams = {
+                cliente: novoPedido.cliente,
+                email_cliente: novoPedido.email,
+                itens: itensSalvos.map(i => i.nome).join(", "),
+                total: total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+                metodo: metodoAtivo,
+                rua: dadosEntrega.rua,
+                numero: dadosEntrega.numero,
+                cidade: dadosEntrega.cidade,
+                cep: dadosEntrega.cep
+            };
+    
+            // ATENÇÃO: Substitua 'SEU_SERVICE_ID' e 'SEU_TEMPLATE_ID' pelos seus códigos!
+            await emailjs.send('service_jllgkuv', 'template_utod53o', templateParams);
+    
+            // C. FINALIZA
+            localStorage.removeItem("carrinho");
+            alert(`Sucesso! Pedido confirmado e resumo enviado para seu e-mail. 🌿`);
+            window.location.href = "index.html";
+    
+        } catch (error) {
+            console.error("Erro:", error);
+            alert("Ocorreu um erro ao finalizar o pedido.");
+        }
+      };
+    </script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

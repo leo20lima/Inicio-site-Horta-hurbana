@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Space - Cadastro & Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+
+    <a href="index.html" class="back-to-home">← Voltar para a Home</a>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <img src="IMG/logo-green-space.png" alt="Green Space">
+            </div>
+
+            <div class="auth-header">
+            <h2>Bem-vindo à nossa comunidade</h2>
+            <p>Sua horta urbana começa aqui com segurança e praticidade.</p>
+        </div>
+
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('cadastro')">Cadastro</button>
+            </div>
+
+            <form id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" placeholder="Sua senha" required>
+                </div>
+                <button type="submit" class="btn-main full-width">Entrar na Horta 🌿</button>
+                <a href="javascript:void(0)" class="forgot-password">Esqueceu a senha?</a>
+            </form>
+
+            <form id="cadastro-form" class="auth-form">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" placeholder="Ex: João Silva" required>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" placeholder="Crie uma senha forte" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" placeholder="Repita a senha" required>
+                </div>
+                <button type="submit" class="btn-main full-width">Criar Minha Conta 🌿</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(type) {
+            const loginForm = document.getElementById('login-form');
+            const cadastroForm = document.getElementById('cadastro-form');
+            const btns = document.querySelectorAll('.tab-btn');
+
+            btns.forEach(btn => btn.classList.remove('active'));
+            
+            if (type === 'login') {
+                loginForm.classList.add('active');
+                cadastroForm.classList.remove('active');
+                btns[0].classList.add('active');
+            } else {
+                loginForm.classList.remove('active');
+                cadastroForm.classList.add('active');
+                btns[1].classList.add('active');
+            }
+        }
+    </script>
+
+<script type="module">
+    // 1. Importamos o Firebase, Autenticação e Banco de Dados
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword,
+      updateProfile 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    // IMPORTAÇÕES DO BANCO DE DADOS:
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  
+    // 2. Suas credenciais
+    const firebaseConfig = {
+      apiKey: "AIzaSyAUeNqpagN-1JmKZ4Y5yOtUovtdVQXrB9c",
+      authDomain: "projetotcc-3ace5.firebaseapp.com",
+      databaseURL: "https://projetotcc-3ace5-default-rtdb.firebaseio.com",
+      projectId: "projetotcc-3ace5",
+      storageBucket: "projetotcc-3ace5.firebasestorage.app",
+      messagingSenderId: "1022715712496",
+      appId: "1:1022715712496:web:6923c5a87a81bddd86c335",
+      measurementId: "G-HYCZQT0BS7"
+    };
+  
+    // 3. Inicializamos o Firebase, Auth e DB
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+  
+    // ==========================================
+    // --- LÓGICA DE CADASTRO ---
+    // ==========================================
+    const cadastroForm = document.getElementById('cadastro-form');
+    cadastroForm.addEventListener('submit', (e) => {
+      e.preventDefault(); 
+  
+      const nome = cadastroForm.querySelector('input[type="text"]').value; 
+      const email = cadastroForm.querySelector('input[type="email"]').value;
+      const senhas = cadastroForm.querySelectorAll('input[type="password"]');
+      const senha = senhas[0].value;
+      const confirmaSenha = senhas[1].value;
+  
+      if (senha !== confirmaSenha) {
+        alert("As senhas não conferem!");
+        return;
+      }
+  
+      // Cria o usuário no Firebase Auth
+      createUserWithEmailAndPassword(auth, email, senha)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+
+          // 1. Atualiza o perfil no Auth (Isso faz o nome aparecer no cabeçalho do index.html)
+          const atualizaAuth = updateProfile(user, { displayName: nome });
+
+          // 2. Salva o usuário no Banco de Dados (Para você ter os dados guardados)
+          const salvaNoBanco = set(ref(db, 'usuarios/' + user.uid), {
+            nome: nome,
+            email: email,
+            dataCadastro: new Date().toISOString()
+          });
+
+          // Espera as duas operações terminarem
+          await Promise.all([atualizaAuth, salvaNoBanco]);
+        })
+        .then(() => {
+          alert("Conta criada com sucesso! O seu espaço verde te aguarda 🌿");
+          window.location.href = "index.html"; // Redireciona para a home
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("Erro no cadastro: " + error.message);
+        });
+    });
+  
+    // ==========================================
+    // --- LÓGICA DE LOGIN ---
+    // ==========================================
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+  
+      const email = loginForm.querySelector('input[type="email"]').value;
+      const senha = loginForm.querySelector('input[type="password"]').value;
+  
+      signInWithEmailAndPassword(auth, email, senha)
+        .then((userCredential) => {
+          alert("Bem-vindo de volta! 🌿");
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("E-mail ou senha incorretos.");
+        });
+    });
+</script>
+
+</body>
+</html>
